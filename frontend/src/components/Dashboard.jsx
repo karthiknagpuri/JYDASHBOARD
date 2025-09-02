@@ -11,13 +11,13 @@ import { calculateRevenue, formatINR } from '../utils/revenueCalculator';
 
 function Dashboard() {
   const [participants, setParticipants] = useState([]);
-  const [priorityPass, setPriorityPass] = useState([]); // Used for Priority Pass seat tracking (525 seats)
+  // Priority Pass removed - no longer tracked
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [alert, setAlert] = useState(null);
   const [activeTab, setActiveTab] = useState('analytics');
   const [showAddYatriModal, setShowAddYatriModal] = useState(false);
-  const [uploadType, setUploadType] = useState('participants'); // 'participants', 'priority-pass', 'submissions', 'screenshot-pending'
+  const [uploadType, setUploadType] = useState('participants'); // 'participants', 'submissions', 'screenshot-pending'
   const fileInputRef = useRef(null);
   
   const navigate = useNavigate();
@@ -52,23 +52,7 @@ function Dashboard() {
           }
         }
 
-        // Fetch Priority Pass data
-        const { data: priorityData, error: priorityError } = await supabase
-          .from('priority_pass')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        if (!priorityError && priorityData) {
-          setPriorityPass(priorityData);
-        } else {
-          // Fallback to API
-          const priorityResponse = await fetch('/api/priority-pass');
-          const priorityResult = await priorityResponse.json();
-          
-          if (priorityResponse.ok) {
-            setPriorityPass(priorityResult.priorityPass || []);
-          }
-        }
+        // Priority Pass data fetching removed
         
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -92,9 +76,7 @@ function Dashboard() {
     // Determine the API endpoint based on upload type
     let endpoint = '/api/participants/upload-csv';
     
-    if (uploadType === 'priority-pass') {
-      endpoint = '/api/priority-pass/upload-csv';
-    } else if (uploadType === 'submissions') {
+    if (uploadType === 'submissions') {
       endpoint = '/api/submissions/upload-csv';
     } else if (uploadType === 'screenshot-pending') {
       endpoint = '/api/screenshot-pending/upload-csv';
@@ -112,8 +94,7 @@ function Dashboard() {
         // Check if we have detailed upload results
         if (data.success > 0) {
           // New records were added
-          const recordType = uploadType === 'priority-pass' ? 'Priority Pass entries' : 
-                           uploadType === 'submissions' ? 'submissions' : 
+          const recordType = uploadType === 'submissions' ? 'submissions' : 
                            uploadType === 'screenshot-pending' ? 'Screenshot Pending entries' : 'participants';
           
           showAlert(`✅ Successfully uploaded ${data.success} new ${recordType} to Supabase`, 'success');
@@ -131,16 +112,6 @@ function Dashboard() {
             
             if (supabaseData) {
               setParticipants(supabaseData);
-            }
-          } else if (uploadType === 'priority-pass') {
-            // Re-fetch Priority Pass data
-            const { data: priorityData } = await supabase
-              .from('priority_pass')
-              .select('*')
-              .order('created_at', { ascending: false });
-            
-            if (priorityData) {
-              setPriorityPass(priorityData);
             }
           }
         } else if (data.errorDetails && data.errorDetails.some(msg => msg.includes('duplicate'))) {
@@ -279,7 +250,7 @@ function Dashboard() {
                     Participants: <strong style={{ color: '#111827' }}>{participants.length}/450</strong>
                   </span>
                   <span style={{ color: '#6b7280' }}>
-                    Priority: <strong style={{ color: '#f59e0b' }}>{priorityPass.length}/525</strong>
+                    {/* Priority Pass removed */}
                   </span>
                 </div>
 
@@ -298,7 +269,6 @@ function Dashboard() {
                     }}
                   >
                     <option value="participants">Participants</option>
-                    <option value="priority-pass">Priority Pass</option>
                     <option value="submissions">Submissions</option>
                     <option value="screenshot-pending">Screenshot</option>
                   </select>
@@ -432,8 +402,8 @@ function Dashboard() {
       )}
 
       {/* Revenue Summary - Only show on analytics tab */}
-      {activeTab === 'analytics' && participants.length + priorityPass.length > 0 && (() => {
-        const revenue = calculateRevenue(participants, priorityPass);
+      {activeTab === 'analytics' && participants.length > 0 && (() => {
+        const revenue = calculateRevenue(participants, []);
         return (
           <div style={{
             background: 'white',
@@ -476,18 +446,7 @@ function Dashboard() {
                   </div>
                 </div>
 
-                {/* Priority Pass Revenue */}
-                <div>
-                  <div style={{ fontSize: '11px', color: '#f59e0b', marginBottom: '4px', fontWeight: '500' }}>
-                    PRIORITY PASS
-                  </div>
-                  <div style={{ fontSize: '18px', fontWeight: '600', color: '#111827' }}>
-                    {formatINR(revenue.priorityPassRevenue)}
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#6b7280' }}>
-                    {revenue.paidPriorityPass}/{priorityPass.length} paid
-                  </div>
-                </div>
+                {/* Priority Pass Revenue removed */}
 
                 {/* Average */}
                 <div>
@@ -534,19 +493,7 @@ function Dashboard() {
                     }} />
                   </div>
                 </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
-                    <span>Priority Pass</span>
-                    <span>{revenue.priorityFillRate.toFixed(0)}%</span>
-                  </div>
-                  <div style={{ height: '4px', background: '#e5e7eb', borderRadius: '2px', overflow: 'hidden' }}>
-                    <div style={{
-                      width: `${revenue.priorityFillRate}%`,
-                      height: '100%',
-                      background: '#f59e0b'
-                    }} />
-                  </div>
-                </div>
+                {/* Priority Pass capacity visualization removed */}
               </div>
             </div>
           </div>
