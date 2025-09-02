@@ -10,8 +10,14 @@ const DataManagement = ({ participants: initialParticipants = [] }) => {
   // View states
   const [viewMode, setViewMode] = useState('sheet'); // 'sheet' or 'cards'
   
-  // Data states
-  const [participants, setParticipants] = useState(initialParticipants);
+  // Data states - initialize with mapped participants
+  const [participants, setParticipants] = useState(() => {
+    return initialParticipants.map(p => ({
+      ...p,
+      status: p.status || 'active',
+      selected: false
+    }));
+  });
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -40,13 +46,18 @@ const DataManagement = ({ participants: initialParticipants = [] }) => {
     { value: 'refunded', label: 'Refunded', color: '#6b7280' }
   ];
 
-  // Update participants when props change
+  // Initialize participants on mount and when props change
   useEffect(() => {
-    setParticipants(initialParticipants.map(p => ({
-      ...p,
-      status: p.status || 'active',
-      selected: false
-    })));
+    console.log('DataManagement received participants:', initialParticipants.length);
+    if (initialParticipants && initialParticipants.length > 0) {
+      const updatedParticipants = initialParticipants.map(p => ({
+        ...p,
+        status: p.status || 'active',
+        selected: false
+      }));
+      setParticipants(updatedParticipants);
+      console.log('DataManagement set participants:', updatedParticipants.length);
+    }
   }, [initialParticipants]);
 
   // Calculate summary statistics

@@ -42,6 +42,7 @@ function Dashboard() {
           .order('created_at', { ascending: false });
         
         if (!participantsError && participantsData) {
+          console.log('Dashboard: Loaded participants from Supabase:', participantsData.length);
           setParticipants(participantsData);
         } else {
           // Fallback to API
@@ -49,6 +50,7 @@ function Dashboard() {
           const data = await response.json();
           
           if (response.ok) {
+            console.log('Dashboard: Loaded participants from API:', (data.participants || []).length);
             setParticipants(data.participants || []);
           }
         }
@@ -556,7 +558,10 @@ function Dashboard() {
           ) : activeTab === 'submissions' ? (
             <CSVSubmissions />
           ) : (
-            <DataManagement participants={participants} />
+            <>
+              {console.log('Dashboard: Passing participants to DataManagement:', participants.length)}
+              <DataManagement participants={participants} />
+            </>
           )}
         </div>
       )}
