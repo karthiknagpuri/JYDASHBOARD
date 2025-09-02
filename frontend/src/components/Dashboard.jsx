@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ModernDashboard from './ModernDashboard';
 import CSVSubmissions from './CSVSubmissions';
+import DataManagement from './DataManagement';
 import UnifiedInsightsBanner from './UnifiedInsightsBanner';
 import AddYatriModal from './AddYatriModal';
 import { supabase } from '../lib/supabase';
-import { Upload, CheckCircle, XCircle, Loader, LogOut, UserPlus, IndianRupee } from 'lucide-react';
+import { Upload, CheckCircle, XCircle, Loader, LogOut, UserPlus, IndianRupee, Database } from 'lucide-react';
 import { calculateRevenue, formatINR } from '../utils/revenueCalculator';
 
 function Dashboard() {
@@ -236,6 +237,23 @@ function Dashboard() {
                 }}
               >
                 Submissions
+              </button>
+              <button
+                onClick={() => setActiveTab('data')}
+                style={{
+                  padding: '6px 12px',
+                  background: activeTab === 'data' ? '#667eea' : 'transparent',
+                  color: activeTab === 'data' ? 'white' : '#6b7280',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                <Database size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                Data Management
               </button>
             </div>
           </div>
@@ -535,8 +553,10 @@ function Dashboard() {
           {/* Main Dashboard Content */}
           {activeTab === 'analytics' ? (
             <ModernDashboard participants={participants} />
-          ) : (
+          ) : activeTab === 'submissions' ? (
             <CSVSubmissions />
+          ) : (
+            <DataManagement participants={participants} />
           )}
         </div>
       )}
