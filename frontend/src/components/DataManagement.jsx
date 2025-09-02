@@ -9,7 +9,6 @@ import {
 const DataManagement = ({ participants: initialParticipants = [] }) => {
   // View states
   const [viewMode, setViewMode] = useState('sheet'); // 'sheet' or 'cards'
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' or 'profiles'
   
   // Data states
   const [participants, setParticipants] = useState(initialParticipants);
@@ -200,40 +199,10 @@ const DataManagement = ({ participants: initialParticipants = [] }) => {
 
   return (
     <div style={{ padding: '20px', backgroundColor: '#f9fafb', minHeight: '100vh' }}>
-      {/* Header Tabs */}
+      {/* Header - Yatris Profiles */}
       <div style={{ marginBottom: '20px' }}>
-        <div style={{ display: 'flex', gap: '20px', borderBottom: '2px solid #e5e7eb', marginBottom: '20px' }}>
-          <button
-            onClick={() => setActiveTab('overview')}
-            style={{
-              padding: '10px 20px',
-              background: 'none',
-              border: 'none',
-              borderBottom: activeTab === 'overview' ? '2px solid #3b82f6' : '2px solid transparent',
-              color: activeTab === 'overview' ? '#3b82f6' : '#6b7280',
-              fontWeight: '600',
-              cursor: 'pointer',
-              marginBottom: '-2px'
-            }}
-          >
-            Data Overview
-          </button>
-          <button
-            onClick={() => setActiveTab('profiles')}
-            style={{
-              padding: '10px 20px',
-              background: 'none',
-              border: 'none',
-              borderBottom: activeTab === 'profiles' ? '2px solid #3b82f6' : '2px solid transparent',
-              color: activeTab === 'profiles' ? '#3b82f6' : '#6b7280',
-              fontWeight: '600',
-              cursor: 'pointer',
-              marginBottom: '-2px'
-            }}
-          >
-            Yatris Profiles
-          </button>
-        </div>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>Yatris Profiles</h2>
+        <p style={{ fontSize: '14px', color: '#6b7280' }}>Manage all participant data, status, and operations</p>
       </div>
 
       {/* Summary Cards */}
@@ -642,115 +611,133 @@ const DataManagement = ({ participants: initialParticipants = [] }) => {
         </div>
       )}
 
-      {/* Main Content Area */}
-      {activeTab === 'overview' ? (
-        viewMode === 'sheet' ? (
-          // Sheet View
+      {/* Main Content Area - Full Profiles View */}
+      {viewMode === 'sheet' ? (
+          // Sheet View - Full Profiles
           <div style={{ background: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '2000px' }}>
                 <thead>
                   <tr style={{ background: '#f9fafb' }}>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', position: 'sticky', left: 0, background: '#f9fafb' }}>
                       <input
                         type="checkbox"
                         checked={selectedRows.size === filteredParticipants.length && filteredParticipants.length > 0}
                         onChange={handleSelectAll}
                       />
                     </th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Name</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Email</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Phone</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>City</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>State</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Age</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Status</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Amount Paid</th>
-                    <th style={{ padding: '12px', textAlign: 'left', fontSize: '12px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Actions</th>
+                    {/* Personal Info */}
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>ID</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Name</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Email</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Phone</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>WhatsApp</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>DOB</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Age</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Gender</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Address</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>City</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>State</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Pincode</th>
+                    {/* Academic/Professional */}
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Education</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>College</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Course</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Occupation</th>
+                    {/* Program Details */}
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Reg Date</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Yatri Type</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>T-Shirt</th>
+                    {/* Financial */}
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Total Fee</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Scholarship %</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Amount Paid</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Payment Date</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Payment Mode</th>
+                    {/* Status */}
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Status</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Documents</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Emergency Contact</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Notes</th>
+                    <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredParticipants.map((participant, index) => (
-                    <tr key={participant.id || index} style={{ borderBottom: '1px solid #e5e7eb' }}>
-                      <td style={{ padding: '12px' }}>
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.has(participant.id)}
-                          onChange={() => handleRowSelect(participant.id)}
-                        />
-                      </td>
-                      <td style={{ padding: '12px', fontSize: '14px', color: '#111827' }}>{participant.name || '-'}</td>
-                      <td style={{ padding: '12px', fontSize: '14px', color: '#6b7280' }}>{participant.email || '-'}</td>
-                      <td style={{ padding: '12px', fontSize: '14px', color: '#6b7280' }}>{participant.phone || '-'}</td>
-                      <td style={{ padding: '12px', fontSize: '14px', color: '#6b7280' }}>{participant.city || '-'}</td>
-                      <td style={{ padding: '12px', fontSize: '14px', color: '#6b7280' }}>{participant.state || '-'}</td>
-                      <td style={{ padding: '12px', fontSize: '14px', color: '#6b7280' }}>{participant.age || '-'}</td>
-                      <td style={{ padding: '12px' }}>
-                        <select
-                          value={participant.status || 'active'}
-                          onChange={(e) => handleStatusChange(participant.id, e.target.value)}
-                          style={{
-                            padding: '4px 8px',
-                            fontSize: '12px',
-                            border: '1px solid #e5e7eb',
-                            borderRadius: '4px',
-                            background: statusOptions.find(s => s.value === participant.status)?.color || '#10b981',
-                            color: 'white',
-                            fontWeight: '500'
-                          }}
-                        >
-                          {statusOptions.map(status => (
-                            <option key={status.value} value={status.value} style={{ background: 'white', color: '#374151' }}>
-                              {status.label}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td style={{ padding: '12px', fontSize: '14px', color: '#111827' }}>
-                        ₹{parseFloat(participant.scholarship_total_amount_paid || 0).toLocaleString('en-IN')}
-                      </td>
-                      <td style={{ padding: '12px' }}>
-                        <div style={{ display: 'flex', gap: '4px' }}>
-                          <button
+                  {filteredParticipants.map((p, index) => {
+                    const scholarshipPercent = p.scholarship_total_amount_paid ? 
+                      (100 - (parseFloat(p.scholarship_total_amount_paid) / 31290 * 100)).toFixed(0) : 0;
+                    
+                    return (
+                      <tr key={p.id || index} style={{ borderBottom: '1px solid #e5e7eb', fontSize: '13px' }}>
+                        <td style={{ padding: '8px', position: 'sticky', left: 0, background: 'white' }}>
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.has(p.id)}
+                            onChange={() => handleRowSelect(p.id)}
+                          />
+                        </td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.id || index + 1}</td>
+                        <td style={{ padding: '8px', color: '#111827', fontWeight: '500' }}>{p.name || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.email || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.phone || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.whatsapp || p.phone || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.dob || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.age || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.gender || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.address || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.city || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.state || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.pincode || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.education || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.college || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.course || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.occupation || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.created_at ? new Date(p.created_at).toLocaleDateString() : '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.yatri_type || 'Participant'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.tshirt_size || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>₹31,290</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{scholarshipPercent}%</td>
+                        <td style={{ padding: '8px', color: '#111827', fontWeight: '500' }}>
+                          ₹{parseFloat(p.scholarship_total_amount_paid || 0).toLocaleString('en-IN')}
+                        </td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.payment_date || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.payment_mode || '-'}</td>
+                        <td style={{ padding: '8px' }}>
+                          <select
+                            value={p.status || 'active'}
+                            onChange={(e) => handleStatusChange(p.id, e.target.value)}
                             style={{
-                              padding: '4px',
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                              color: '#6b7280'
+                              padding: '2px 4px',
+                              fontSize: '11px',
+                              border: '1px solid #e5e7eb',
+                              borderRadius: '4px',
+                              background: statusOptions.find(s => s.value === p.status)?.color || '#10b981',
+                              color: 'white'
                             }}
-                            title="View Details"
                           >
-                            <Eye size={16} />
-                          </button>
-                          <button
-                            style={{
-                              padding: '4px',
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                              color: '#6b7280'
-                            }}
-                            title="Edit"
-                          >
-                            <Edit size={16} />
-                          </button>
-                          <button
-                            style={{
-                              padding: '4px',
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                              color: '#6b7280'
-                            }}
-                            title="More Options"
-                          >
-                            <MoreVertical size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            {statusOptions.map(status => (
+                              <option key={status.value} value={status.value} style={{ background: 'white', color: '#374151' }}>
+                                {status.label}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.documents_verified ? '✓' : 'Pending'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.emergency_contact || '-'}</td>
+                        <td style={{ padding: '8px', color: '#6b7280' }}>{p.notes || '-'}</td>
+                        <td style={{ padding: '8px' }}>
+                          <div style={{ display: 'flex', gap: '2px' }}>
+                            <button style={{ padding: '2px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                              <Eye size={14} />
+                            </button>
+                            <button style={{ padding: '2px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                              <Edit size={14} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
               
@@ -893,133 +880,7 @@ const DataManagement = ({ participants: initialParticipants = [] }) => {
             })}
           </div>
         )
-      ) : (
-        // Yatris Profiles Tab - Full column view
-        <div style={{ background: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1500px' }}>
-              <thead>
-                <tr style={{ background: '#f9fafb' }}>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', position: 'sticky', left: 0, background: '#f9fafb' }}>
-                    <input type="checkbox" onChange={handleSelectAll} />
-                  </th>
-                  {/* Personal Info */}
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>ID</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Name</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Email</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Phone</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>WhatsApp</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>DOB</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Age</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Gender</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Address</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>City</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>State</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Pincode</th>
-                  {/* Academic/Professional */}
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Education</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>College</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Course</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Occupation</th>
-                  {/* Program Details */}
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Reg Date</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Yatri Type</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>T-Shirt</th>
-                  {/* Financial */}
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Total Fee</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Scholarship %</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Amount Paid</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Payment Date</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Payment Mode</th>
-                  {/* Status */}
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Status</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Documents</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Emergency Contact</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Notes</th>
-                  <th style={{ padding: '8px', textAlign: 'left', fontSize: '11px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredParticipants.map((p, index) => {
-                  const scholarshipPercent = p.scholarship_total_amount_paid ? 
-                    (100 - (parseFloat(p.scholarship_total_amount_paid) / 31290 * 100)).toFixed(0) : 0;
-                  
-                  return (
-                    <tr key={p.id || index} style={{ borderBottom: '1px solid #e5e7eb', fontSize: '13px' }}>
-                      <td style={{ padding: '8px', position: 'sticky', left: 0, background: 'white' }}>
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.has(p.id)}
-                          onChange={() => handleRowSelect(p.id)}
-                        />
-                      </td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.id || index + 1}</td>
-                      <td style={{ padding: '8px', color: '#111827', fontWeight: '500' }}>{p.name || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.email || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.phone || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.whatsapp || p.phone || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.dob || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.age || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.gender || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.address || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.city || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.state || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.pincode || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.education || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.college || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.course || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.occupation || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.created_at ? new Date(p.created_at).toLocaleDateString() : '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.yatri_type || 'Participant'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.tshirt_size || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>₹31,290</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{scholarshipPercent}%</td>
-                      <td style={{ padding: '8px', color: '#111827', fontWeight: '500' }}>
-                        ₹{parseFloat(p.scholarship_total_amount_paid || 0).toLocaleString('en-IN')}
-                      </td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.payment_date || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.payment_mode || '-'}</td>
-                      <td style={{ padding: '8px' }}>
-                        <select
-                          value={p.status || 'active'}
-                          onChange={(e) => handleStatusChange(p.id, e.target.value)}
-                          style={{
-                            padding: '2px 4px',
-                            fontSize: '11px',
-                            border: '1px solid #e5e7eb',
-                            borderRadius: '4px',
-                            background: statusOptions.find(s => s.value === p.status)?.color || '#10b981',
-                            color: 'white'
-                          }}
-                        >
-                          {statusOptions.map(status => (
-                            <option key={status.value} value={status.value} style={{ background: 'white', color: '#374151' }}>
-                              {status.label}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.documents_verified ? '✓' : 'Pending'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.emergency_contact || '-'}</td>
-                      <td style={{ padding: '8px', color: '#6b7280' }}>{p.notes || '-'}</td>
-                      <td style={{ padding: '8px' }}>
-                        <div style={{ display: 'flex', gap: '2px' }}>
-                          <button style={{ padding: '2px', background: 'none', border: 'none', cursor: 'pointer' }}>
-                            <Eye size={14} />
-                          </button>
-                          <button style={{ padding: '2px', background: 'none', border: 'none', cursor: 'pointer' }}>
-                            <Edit size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      }
     </div>
   );
 };
