@@ -1,13 +1,8 @@
 import React from 'react';
-import { Users, UserCheck, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Users, UserCheck, TrendingUp, Activity } from 'lucide-react';
 
 const SeatCapacityTracker = ({ participants = [] }) => {
-  // Constants for seat allocation
-  const PARTICIPANT_SEATS = 450;
-  const FACILITATOR_SEATS = 75;
-  const TOTAL_SEATS = PARTICIPANT_SEATS + FACILITATOR_SEATS;
-
-  // Calculate current occupancy
+  // Calculate actual counts from uploaded data
   const facilitators = participants.filter(p => 
     p.yatri_type && p.yatri_type.toLowerCase() === 'facilitator'
   ).length;
@@ -16,26 +11,11 @@ const SeatCapacityTracker = ({ participants = [] }) => {
     !p.yatri_type || p.yatri_type.toLowerCase() === 'participant'
   ).length;
   
-  const totalOccupied = participants.length;
+  const totalRegistered = participants.length;
 
-  // Calculate percentages
-  const participantPercentage = (regularParticipants / PARTICIPANT_SEATS * 100).toFixed(1);
-  const facilitatorPercentage = (facilitators / FACILITATOR_SEATS * 100).toFixed(1);
-  const totalPercentage = (totalOccupied / TOTAL_SEATS * 100).toFixed(1);
-
-  // Determine status colors based on occupancy
-  const getStatusColor = (percentage) => {
-    if (percentage >= 90) return '#ef4444'; // Red - Almost full
-    if (percentage >= 75) return '#f59e0b'; // Yellow - Warning
-    return '#10b981'; // Green - Available
-  };
-
-  const getGradient = (percentage) => {
-    if (percentage >= 90) return 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-    if (percentage >= 75) return 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
-    return 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-  };
-
+  // Helper function for gradient colors
+  const getGradient = () => 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+  
   return (
     <div style={{
       display: 'grid',
@@ -43,7 +23,7 @@ const SeatCapacityTracker = ({ participants = [] }) => {
       gap: '24px',
       marginBottom: '32px'
     }}>
-      {/* Participant Seats Card */}
+      {/* Participant Count Card */}
       <div style={{
         background: 'white',
         borderRadius: '20px',
@@ -60,7 +40,7 @@ const SeatCapacityTracker = ({ participants = [] }) => {
           right: 0,
           width: '150px',
           height: '150px',
-          background: getGradient(participantPercentage),
+          background: getGradient(),
           borderRadius: '50%',
           transform: 'translate(50%, -50%)',
           opacity: 0.1
@@ -77,72 +57,59 @@ const SeatCapacityTracker = ({ participants = [] }) => {
                 letterSpacing: '0.5px',
                 fontWeight: '600'
               }}>
-                Participant Seats
+                Registered Participants
               </p>
               <h2 style={{ 
-                fontSize: '32px', 
+                fontSize: '36px', 
                 fontWeight: '700', 
                 margin: '8px 0',
-                color: '#0f172a'
+                color: '#0f172a',
+                whiteSpace: 'nowrap'
               }}>
-                {regularParticipants} / {PARTICIPANT_SEATS}
+                {regularParticipants.toLocaleString('en-IN')}
               </h2>
               <p style={{ 
-                color: getStatusColor(participantPercentage), 
+                color: '#10b981', 
                 fontSize: '14px', 
                 margin: 0,
                 fontWeight: '600'
               }}>
-                {PARTICIPANT_SEATS - regularParticipants} seats available
+                Yatris registered
               </p>
             </div>
             <div style={{
               width: '56px',
               height: '56px',
-              background: getGradient(participantPercentage),
+              background: getGradient(),
               borderRadius: '16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: `0 8px 16px ${getStatusColor(participantPercentage)}33`
+              boxShadow: '0 8px 16px rgba(16, 185, 129, 0.2)'
             }}>
               <Users size={28} color="white" strokeWidth={2.5} />
             </div>
           </div>
           
-          {/* Progress Bar */}
+          {/* Activity Indicator */}
           <div style={{
-            width: '100%',
-            height: '12px',
-            background: '#f1f5f9',
-            borderRadius: '6px',
-            overflow: 'hidden',
-            marginBottom: '12px'
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '12px',
+            background: '#f0fdf4',
+            borderRadius: '12px',
+            marginTop: '16px'
           }}>
-            <div style={{
-              width: `${Math.min(participantPercentage, 100)}%`,
-              height: '100%',
-              background: getGradient(participantPercentage),
-              transition: 'width 0.5s ease',
-              borderRadius: '6px'
-            }} />
+            <Activity size={16} color="#10b981" />
+            <span style={{ fontSize: '13px', color: '#15803d', fontWeight: '500' }}>
+              Active registrations from database
+            </span>
           </div>
-          
-          <p style={{
-            fontSize: '24px',
-            fontWeight: '700',
-            margin: 0,
-            background: getGradient(participantPercentage),
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
-          }}>
-            {participantPercentage}% Filled
-          </p>
         </div>
       </div>
 
-      {/* Facilitator Seats Card */}
+      {/* Facilitator Count Card */}
       <div style={{
         background: 'white',
         borderRadius: '20px',
@@ -159,7 +126,7 @@ const SeatCapacityTracker = ({ participants = [] }) => {
           right: 0,
           width: '150px',
           height: '150px',
-          background: getGradient(facilitatorPercentage),
+          background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
           borderRadius: '50%',
           transform: 'translate(50%, -50%)',
           opacity: 0.1
@@ -176,72 +143,59 @@ const SeatCapacityTracker = ({ participants = [] }) => {
                 letterSpacing: '0.5px',
                 fontWeight: '600'
               }}>
-                Facilitator Seats
+                Registered Facilitators
               </p>
               <h2 style={{ 
-                fontSize: '32px', 
+                fontSize: '36px', 
                 fontWeight: '700', 
                 margin: '8px 0',
-                color: '#0f172a'
+                color: '#0f172a',
+                whiteSpace: 'nowrap'
               }}>
-                {facilitators} / {FACILITATOR_SEATS}
+                {facilitators.toLocaleString('en-IN')}
               </h2>
               <p style={{ 
-                color: getStatusColor(facilitatorPercentage), 
+                color: '#3b82f6', 
                 fontSize: '14px', 
                 margin: 0,
                 fontWeight: '600'
               }}>
-                {FACILITATOR_SEATS - facilitators} seats available
+                Facilitators registered
               </p>
             </div>
             <div style={{
               width: '56px',
               height: '56px',
-              background: getGradient(facilitatorPercentage),
+              background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
               borderRadius: '16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: `0 8px 16px ${getStatusColor(facilitatorPercentage)}33`
+              boxShadow: '0 8px 16px rgba(59, 130, 246, 0.2)'
             }}>
               <UserCheck size={28} color="white" strokeWidth={2.5} />
             </div>
           </div>
           
-          {/* Progress Bar */}
+          {/* Activity Indicator */}
           <div style={{
-            width: '100%',
-            height: '12px',
-            background: '#f1f5f9',
-            borderRadius: '6px',
-            overflow: 'hidden',
-            marginBottom: '12px'
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '12px',
+            background: '#eff6ff',
+            borderRadius: '12px',
+            marginTop: '16px'
           }}>
-            <div style={{
-              width: `${Math.min(facilitatorPercentage, 100)}%`,
-              height: '100%',
-              background: getGradient(facilitatorPercentage),
-              transition: 'width 0.5s ease',
-              borderRadius: '6px'
-            }} />
+            <Activity size={16} color="#3b82f6" />
+            <span style={{ fontSize: '13px', color: '#1e40af', fontWeight: '500' }}>
+              Active facilitator registrations
+            </span>
           </div>
-          
-          <p style={{
-            fontSize: '24px',
-            fontWeight: '700',
-            margin: 0,
-            background: getGradient(facilitatorPercentage),
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
-          }}>
-            {facilitatorPercentage}% Filled
-          </p>
         </div>
       </div>
 
-      {/* Total Capacity Card */}
+      {/* Total Registration Card */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         borderRadius: '20px',
@@ -274,14 +228,15 @@ const SeatCapacityTracker = ({ participants = [] }) => {
                 fontWeight: '600',
                 opacity: 0.9
               }}>
-                Total Capacity
+                Total Registrations
               </p>
               <h2 style={{ 
-                fontSize: '32px', 
+                fontSize: '36px', 
                 fontWeight: '700', 
-                margin: '8px 0'
+                margin: '8px 0',
+                whiteSpace: 'nowrap'
               }}>
-                {totalOccupied} / {TOTAL_SEATS}
+                {totalRegistered.toLocaleString('en-IN')}
               </h2>
               <p style={{ 
                 fontSize: '14px', 
@@ -289,7 +244,7 @@ const SeatCapacityTracker = ({ participants = [] }) => {
                 fontWeight: '600',
                 opacity: 0.9
               }}>
-                {TOTAL_SEATS - totalOccupied} total seats remaining
+                Total Yatris in database
               </p>
             </div>
             <div style={{
@@ -306,7 +261,7 @@ const SeatCapacityTracker = ({ participants = [] }) => {
             </div>
           </div>
           
-          {/* Combined Progress */}
+          {/* Registration Breakdown */}
           <div style={{
             display: 'flex',
             gap: '12px',
@@ -315,49 +270,25 @@ const SeatCapacityTracker = ({ participants = [] }) => {
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: '11px', opacity: 0.8, margin: '0 0 4px 0', fontWeight: '600' }}>PARTICIPANTS</p>
               <div style={{
-                width: '100%',
-                height: '8px',
-                background: 'rgba(255, 255, 255, 0.2)',
-                borderRadius: '4px',
-                overflow: 'hidden'
+                fontSize: '20px',
+                fontWeight: '700'
               }}>
-                <div style={{
-                  width: `${Math.min(participantPercentage, 100)}%`,
-                  height: '100%',
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  transition: 'width 0.5s ease'
-                }} />
+                {regularParticipants.toLocaleString('en-IN')}
               </div>
             </div>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: '11px', opacity: 0.8, margin: '0 0 4px 0', fontWeight: '600' }}>FACILITATORS</p>
               <div style={{
-                width: '100%',
-                height: '8px',
-                background: 'rgba(255, 255, 255, 0.2)',
-                borderRadius: '4px',
-                overflow: 'hidden'
+                fontSize: '20px',
+                fontWeight: '700'
               }}>
-                <div style={{
-                  width: `${Math.min(facilitatorPercentage, 100)}%`,
-                  height: '100%',
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  transition: 'width 0.5s ease'
-                }} />
+                {facilitators.toLocaleString('en-IN')}
               </div>
             </div>
           </div>
           
-          <p style={{
-            fontSize: '24px',
-            fontWeight: '700',
-            margin: 0
-          }}>
-            {totalPercentage}% Overall Occupancy
-          </p>
-          
-          {/* Warning if approaching capacity */}
-          {totalPercentage >= 85 && (
+          {/* Distribution Percentage */}
+          {totalRegistered > 0 && (
             <div style={{
               marginTop: '16px',
               padding: '12px',
@@ -368,9 +299,8 @@ const SeatCapacityTracker = ({ participants = [] }) => {
               gap: '8px',
               backdropFilter: 'blur(10px)'
             }}>
-              <AlertTriangle size={20} />
               <span style={{ fontSize: '13px', fontWeight: '600' }}>
-                Approaching full capacity!
+                Distribution: {((regularParticipants / totalRegistered) * 100).toFixed(1)}% Participants, {((facilitators / totalRegistered) * 100).toFixed(1)}% Facilitators
               </span>
             </div>
           )}

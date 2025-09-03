@@ -59,3 +59,4 @@ backend/uploads/
 .eslintcache
 .npm
 .yarn
+node_modules

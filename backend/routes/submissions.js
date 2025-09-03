@@ -35,8 +35,17 @@ const upload = multer({
 
 // CSV column mapping for submissions (can be customized based on actual submission fields)
 const columnMapping = {
-  'Submission ID': 'submission_id',
   'Yatri Id': 'yatri_id',
+  'First Name': 'first_name',
+  'Last Name': 'last_name',
+  'Gender': 'gender',
+  'Role': 'role',
+  'Mobile No': 'mobile_no',
+  'Age': 'age',
+  'Address': 'address',
+  'Submitted Date': 'submitted_date',
+  // Legacy mappings for backward compatibility
+  'Submission ID': 'submission_id',
   'Application ID': 'application_id',
   'Submission Date': 'submission_date',
   'Status': 'status',
@@ -46,8 +55,6 @@ const columnMapping = {
   'Reviewer': 'reviewer',
   'Category': 'category',
   'Priority': 'priority',
-  'First Name': 'first_name',
-  'Last Name': 'last_name',
   'Email': 'email',
   'Contact Number': 'contact_number',
   'Essay': 'essay',
@@ -75,6 +82,21 @@ const parseSubmissionData = (row) => {
   });
 
   // Convert date strings to proper format
+  if (submission.submitted_date) {
+    try {
+      // Handle DD-MM-YYYY format
+      const parts = submission.submitted_date.split('-');
+      if (parts.length === 3) {
+        const dateStr = `${parts[2]}-${parts[1]}-${parts[0]}`; // Convert to YYYY-MM-DD
+        submission.submitted_date = new Date(dateStr).toISOString();
+      } else {
+        submission.submitted_date = new Date(submission.submitted_date).toISOString();
+      }
+    } catch (e) {
+      submission.submitted_date = null;
+    }
+  }
+  
   if (submission.submission_date) {
     try {
       submission.submission_date = new Date(submission.submission_date).toISOString();
@@ -100,6 +122,10 @@ const parseSubmissionData = (row) => {
   }
 
   // Convert numeric fields
+  if (submission.age) {
+    submission.age = parseInt(submission.age) || null;
+  }
+  
   if (submission.score) {
     submission.score = parseFloat(submission.score) || 0;
   }
@@ -219,9 +245,9 @@ router.post('/upload-csv', upload.single('csv'), async (req, res) => {
           try {
             const submission = parseSubmissionData(row);
             
-            // Basic validation (can be customized)
-            if (!submission.submission_id && !submission.yatri_id && !submission.application_id) {
-              errors.push(`Row ${rowCount}: Missing identifier (submission_id, yatri_id, or application_id)`);
+            // Basic validation - yatri_id is required
+            if (!submission.yatri_id) {
+              errors.push(`Row ${rowCount}: Missing Yatri ID`);
               return;
             }
 

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Favicon</title>
+</head>
+<body>
+    <h1>Tree Favicon Generator</h1>
+    <canvas id="canvas" width="64" height="64"></canvas>
+    <br>
+    <canvas id="canvas32" width="32" height="32"></canvas>
+    <br>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <br>
+    <button onclick="downloadPNG(64)">Download 64x64 PNG</button>
+    <button onclick="downloadPNG(32)">Download 32x32 PNG</button>
+    <button onclick="downloadPNG(16)">Download 16x16 PNG</button>
+
+    <script>
+        function drawTree(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 64;
+            
+            // Navy blue background
+            ctx.fillStyle = '#3B3B6D';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Orange tree design
+            ctx.strokeStyle = '#FF8C42';
+            ctx.fillStyle = '#FF8C42';
+            ctx.lineWidth = 1.5 * scale;
+            ctx.lineCap = 'round';
+            
+            // Center point
+            const cx = size / 2;
+            const cy = size / 2;
+            
+            // Central circle
+            ctx.beginPath();
+            ctx.arc(cx, cy, 4 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw branches radiating out
+            for (let angle = 0; angle < 360; angle += 45) {
+                const rad = angle * Math.PI / 180;
+                
+                // Main branch
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(rad) * 4 * scale, cy + Math.sin(rad) * 4 * scale);
+                ctx.lineTo(cx + Math.cos(rad) * 18 * scale, cy + Math.sin(rad) * 18 * scale);
+                ctx.stroke();
+                
+                // Sub-branches
+                const branchX = cx + Math.cos(rad) * 10 * scale;
+                const branchY = cy + Math.sin(rad) * 10 * scale;
+                
+                ctx.beginPath();
+                ctx.moveTo(branchX, branchY);
+                ctx.lineTo(branchX + Math.cos(rad - 0.5) * 3 * scale, branchY + Math.sin(rad - 0.5) * 3 * scale);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(branchX, branchY);
+                ctx.lineTo(branchX + Math.cos(rad + 0.5) * 3 * scale, branchY + Math.sin(rad + 0.5) * 3 * scale);
+                ctx.stroke();
+                
+                // Smaller sub-branches
+                const branch2X = cx + Math.cos(rad) * 14 * scale;
+                const branch2Y = cy + Math.sin(rad) * 14 * scale;
+                
+                ctx.beginPath();
+                ctx.moveTo(branch2X, branch2Y);
+                ctx.lineTo(branch2X + Math.cos(rad - 0.3) * 2 * scale, branch2Y + Math.sin(rad - 0.3) * 2 * scale);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(branch2X, branch2Y);
+                ctx.lineTo(branch2X + Math.cos(rad + 0.3) * 2 * scale, branch2Y + Math.sin(rad + 0.3) * 2 * scale);
+                ctx.stroke();
+            }
+            
+            // Add intermediate branches for fuller look
+            for (let angle = 22.5; angle < 360; angle += 45) {
+                const rad = angle * Math.PI / 180;
+                
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(rad) * 4 * scale, cy + Math.sin(rad) * 4 * scale);
+                ctx.lineTo(cx + Math.cos(rad) * 14 * scale, cy + Math.sin(rad) * 14 * scale);
+                ctx.stroke();
+                
+                const branchX = cx + Math.cos(rad) * 8 * scale;
+                const branchY = cy + Math.sin(rad) * 8 * scale;
+                
+                ctx.beginPath();
+                ctx.moveTo(branchX, branchY);
+                ctx.lineTo(branchX + Math.cos(rad - 0.4) * 2 * scale, branchY + Math.sin(rad - 0.4) * 2 * scale);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(branchX, branchY);
+                ctx.lineTo(branchX + Math.cos(rad + 0.4) * 2 * scale, branchY + Math.sin(rad + 0.4) * 2 * scale);
+                ctx.stroke();
+            }
+        }
+        
+        // Draw on all canvases
+        drawTree(document.getElementById('canvas'), 64);
+        drawTree(document.getElementById('canvas32'), 32);
+        drawTree(document.getElementById('canvas16'), 16);
+        
+        function downloadPNG(size) {
+            const canvas = size === 64 ? document.getElementById('canvas') :
+                          size === 32 ? document.getElementById('canvas32') :
+                          document.getElementById('canvas16');
+            const link = document.createElement('a');
+            link.download = `favicon-${size}x${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>

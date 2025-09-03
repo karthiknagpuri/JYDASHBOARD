@@ -33,27 +33,56 @@ const upload = multer({
   }
 });
 
-// CSV column mapping
+// CSV column mapping with support for multiple formats
 const columnMapping = {
   'Yatri Id': 'yatri_id',
+  'yatri_id': 'yatri_id',
+  'YatriId': 'yatri_id',
+  'ID': 'yatri_id',
+  
   'Yatri Type': 'yatri_type',
   'First Name': 'first_name',
-  'Last Name': 'last_name',
+  'first_name': 'first_name',
+  'FirstName': 'first_name',
+  
+  'Last Name': 'last_name', 
+  'last_name': 'last_name',
+  'LastName': 'last_name',
+  
   'Email': 'email',
+  'email': 'email',
+  'EmailAddress': 'email',
+  
   'Dial Code': 'dial_code',
   'Contact Number': 'contact_number',
+  'Mobile No': 'contact_number',
+  'mobile_no': 'contact_number',
+  'Phone': 'contact_number',
+  
   'DOB': 'date_of_birth',
+  'Date of Birth': 'date_of_birth',
+  
   'Gender': 'gender',
+  'gender': 'gender',
+  
   'Address': 'address',
+  'address': 'address',
+  
   'Country': 'country',
   'State': 'state',
   'District': 'district',
+  
   'Education': 'education',
   'Status': 'status',
   'Institute': 'institute',
+  
   'Area Of Interest': 'area_of_interest',
   'Area Of Interest2': 'area_of_interest_2',
+  
   'Profile': 'profile',
+  'Role': 'role',
+  'role': 'role',
+  
   'Application Submitted On': 'application_submitted_on',
   'Yatri Annual Income': 'yatri_annual_income',
   'Selected Date': 'selected_date',
@@ -61,7 +90,12 @@ const columnMapping = {
   'Payment Date': 'payment_date',
   'Payment ID': 'payment_id',
   'Designation': 'designation',
-  'Source': 'source'
+  'Source': 'source',
+  
+  // Additional mappings for flexibility
+  'Preference 1': 'preference_1',
+  'Preference 2': 'preference_2',
+  '12 Digit Aaadhaar': 'aadhaar'
 };
 
 // Parse and validate participant data
@@ -78,37 +112,43 @@ const parseParticipantData = (row) => {
     }
   });
 
-  // Convert date strings to proper format
-  if (participant.date_of_birth) {
+  // Convert date strings to proper format with support for DD-MM-YYYY
+  const parseDate = (dateStr) => {
+    if (!dateStr) return null;
     try {
-      participant.date_of_birth = new Date(participant.date_of_birth).toISOString().split('T')[0];
+      // Try DD-MM-YYYY format first
+      const parts = dateStr.split('-');
+      if (parts.length === 3 && parts[0].length <= 2) {
+        const day = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1;
+        const year = parseInt(parts[2]);
+        return new Date(year, month, day);
+      }
+      // Otherwise try standard date parsing
+      return new Date(dateStr);
     } catch (e) {
-      participant.date_of_birth = null;
+      return null;
     }
+  };
+
+  if (participant.date_of_birth) {
+    const date = parseDate(participant.date_of_birth);
+    participant.date_of_birth = date ? date.toISOString().split('T')[0] : null;
   }
 
   if (participant.application_submitted_on) {
-    try {
-      participant.application_submitted_on = new Date(participant.application_submitted_on).toISOString();
-    } catch (e) {
-      participant.application_submitted_on = null;
-    }
+    const date = parseDate(participant.application_submitted_on);
+    participant.application_submitted_on = date ? date.toISOString() : null;
   }
 
   if (participant.selected_date) {
-    try {
-      participant.selected_date = new Date(participant.selected_date).toISOString().split('T')[0];
-    } catch (e) {
-      participant.selected_date = null;
-    }
+    const date = parseDate(participant.selected_date);
+    participant.selected_date = date ? date.toISOString().split('T')[0] : null;
   }
 
   if (participant.payment_date) {
-    try {
-      participant.payment_date = new Date(participant.payment_date).toISOString().split('T')[0];
-    } catch (e) {
-      participant.payment_date = null;
-    }
+    const date = parseDate(participant.payment_date);
+    participant.payment_date = date ? date.toISOString().split('T')[0] : null;
   }
 
   // Convert numeric fields
@@ -152,19 +192,9 @@ router.post('/upload-csv', upload.single('csv'), async (req, res) => {
           try {
             const participant = parseParticipantData(row);
             
-            // Basic validation
+            // Basic validation - only require yatri_id
             if (!participant.yatri_id) {
-              errors.push(`Row missing Yatri ID: ${JSON.stringify(row)}`);
-              return;
-            }
-
-            if (!participant.first_name || !participant.last_name) {
-              errors.push(`Row ${participant.yatri_id}: Missing name information`);
-              return;
-            }
-
-            if (!participant.email) {
-              errors.push(`Row ${participant.yatri_id}: Missing email`);
+              errors.push(`Row ${rowCount}: Missing Yatri ID`);
               return;
             }
 

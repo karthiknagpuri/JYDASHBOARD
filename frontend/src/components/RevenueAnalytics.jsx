@@ -4,9 +4,10 @@ import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import RevenueScenario from './RevenueScenario';
 import GeographicalDistribution from './GeographicalDistribution';
 import StateWiseAnalysis from './StateWiseAnalysis';
+import ReportCard from './ReportCard';
 
 const RevenueAnalytics = ({ participants = [] }) => {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'projection', 'comparison', 'gap', 'scenario', 'geographical', 'statewise'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'projection', 'comparison', 'gap', 'scenario', 'geographical', 'statewise', 'reportcard'
   const [viewMode, setViewMode] = useState('chart'); // for projection view
 
   // Best Case/Target Projections Data
@@ -298,6 +299,7 @@ const RevenueAnalytics = ({ participants = [] }) => {
       }}>
         {[
           { id: 'overview', label: 'Overview' },
+          { id: 'reportcard', label: 'Report Card' },
           { id: 'scenario', label: 'Pricing Scenario' },
           { id: 'projection', label: 'Best Case' },
           { id: 'comparison', label: 'Actual vs Target' },
@@ -842,6 +844,13 @@ const RevenueAnalytics = ({ participants = [] }) => {
       {activeTab === 'statewise' && (
         <div style={{ marginTop: '16px' }}>
           <StateWiseAnalysis participants={participants} />
+        </div>
+      )}
+
+      {/* Report Card Tab */}
+      {activeTab === 'reportcard' && (
+        <div style={{ marginTop: '16px' }}>
+          <ReportCard />
         </div>
       )}
     </div>
