@@ -7,8 +7,9 @@ import DataManagement from './DataManagement';
 import UnifiedInsightsBanner from './UnifiedInsightsBanner';
 import AddYatriModal from './AddYatriModal';
 import Sidebar from './Sidebar';
+import Settings from './Settings';
 import { supabase } from '../lib/supabase';
-import { Upload, CheckCircle, XCircle, Loader, UserPlus, IndianRupee } from 'lucide-react';
+import { Upload, CheckCircle, XCircle, Loader, UserPlus, IndianRupee, LogOut } from 'lucide-react';
 import { calculateRevenue, formatINR } from '../utils/revenueCalculator';
 
 function Dashboard() {
@@ -661,10 +662,7 @@ function Dashboard() {
               </div>
             )}
             {activeTab === 'settings' && (
-              <div style={{ padding: '24px' }}>
-                <h3>Settings - Coming Soon</h3>
-                <p>Dashboard configuration and preferences will be available here.</p>
-              </div>
+              <Settings />
             )}
             {activeTab === 'help' && (
               <div style={{ padding: '24px' }}>
