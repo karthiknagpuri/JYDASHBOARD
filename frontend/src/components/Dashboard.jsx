@@ -6,8 +6,9 @@ import CSVSubmissions from './CSVSubmissions';
 import DataManagement from './DataManagement';
 import UnifiedInsightsBanner from './UnifiedInsightsBanner';
 import AddYatriModal from './AddYatriModal';
+import Sidebar from './Sidebar';
 import { supabase } from '../lib/supabase';
-import { Upload, CheckCircle, XCircle, Loader, LogOut, UserPlus, IndianRupee, Database } from 'lucide-react';
+import { Upload, CheckCircle, XCircle, Loader, UserPlus, IndianRupee } from 'lucide-react';
 import { calculateRevenue, formatINR } from '../utils/revenueCalculator';
 
 function Dashboard() {
@@ -178,91 +179,86 @@ function Dashboard() {
     <div style={{ 
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom, #f9fafb, #f3f4f6)',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      display: 'flex'
     }}>
-      {/* Simplified Header */}
-      <header style={{
-        background: 'white',
-        borderBottom: '1px solid #e5e7eb',
-        padding: '16px 24px'
+      {/* Sidebar */}
+      <Sidebar 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onLogout={handleLogout}
+        onAddYatri={() => setShowAddYatriModal(true)}
+        notifications={0}
+      />
+      
+      {/* Main Content Area */}
+      <div style={{ 
+        flex: 1,
+        marginLeft: '260px',
+        transition: 'margin-left 0.3s ease'
       }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
+        {/* Simplified Header */}
+        <header style={{
+          background: 'white',
+          borderBottom: '1px solid #e5e7eb',
+          padding: '16px 24px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50
         }}>
-          {/* Logo and Title */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <h1 style={{ 
-              margin: 0, 
-              fontSize: '28px', 
-              fontWeight: '800',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '-0.5px'
-            }}>
-              Jagriti Yatra Dashboard
-            </h1>
-            
-            {/* Tab Navigation */}
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                onClick={() => setActiveTab('analytics')}
-                style={{
-                  padding: '6px 12px',
-                  background: activeTab === 'analytics' ? '#667eea' : 'transparent',
-                  color: activeTab === 'analytics' ? 'white' : '#6b7280',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-              >
-                Analytics
-              </button>
-              <button
-                onClick={() => setActiveTab('submissions')}
-                style={{
-                  padding: '6px 12px',
-                  background: activeTab === 'submissions' ? '#667eea' : 'transparent',
-                  color: activeTab === 'submissions' ? 'white' : '#6b7280',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-              >
-                Submissions
-              </button>
-              <button
-                onClick={() => setActiveTab('data')}
-                style={{
-                  padding: '6px 12px',
-                  background: activeTab === 'data' ? '#667eea' : 'transparent',
-                  color: activeTab === 'data' ? 'white' : '#6b7280',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-              >
-                <Database size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
-                Data Management
-              </button>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            {/* Page Title */}
+            <div>
+              <h2 style={{ 
+                margin: 0, 
+                fontSize: '24px', 
+                fontWeight: '700',
+                color: '#111827'
+              }}>
+                {activeTab === 'dashboard' && 'Dashboard Overview'}
+                {activeTab === 'analytics' && 'Analytics'}
+                {activeTab === 'data' && 'Data Management'}
+                {activeTab === 'participants' && 'Participants'}
+                {activeTab === 'revenue' && 'Revenue Analytics'}
+                {activeTab === 'states' && 'State-wise Analysis'}
+                {activeTab === 'submissions' && 'CSV Submissions'}
+                {activeTab === 'schedule' && 'Event Schedule'}
+                {activeTab === 'performance' && 'Performance Metrics'}
+                {activeTab === 'quality' && 'Data Quality'}
+                {activeTab === 'reports' && 'Reports'}
+                {activeTab === 'awards' && 'Awards & Recognition'}
+                {activeTab === 'communication' && 'Communication Hub'}
+                {activeTab === 'upload' && 'Upload Data'}
+                {activeTab === 'settings' && 'Settings'}
+                {activeTab === 'help' && 'Help & Support'}
+              </h2>
+              <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>
+                {activeTab === 'dashboard' && 'Complete overview of all metrics and insights'}
+                {activeTab === 'analytics' && 'Data visualizations and insights'}
+                {activeTab === 'data' && 'Manage and filter participant data'}
+                {activeTab === 'participants' && 'View and manage all yatris'}
+                {activeTab === 'revenue' && 'Financial performance and projections'}
+                {activeTab === 'states' && 'Geographic distribution and insights'}
+                {activeTab === 'submissions' && 'Review and manage CSV uploads'}
+                {activeTab === 'schedule' && 'Event timeline and milestones'}
+                {activeTab === 'performance' && 'Key performance indicators'}
+                {activeTab === 'quality' && 'Data accuracy and completeness'}
+                {activeTab === 'reports' && 'Generate and download reports'}
+                {activeTab === 'awards' && 'Yatri achievements and badges'}
+                {activeTab === 'communication' && 'Messages and notifications'}
+                {activeTab === 'upload' && 'Import CSV data files'}
+                {activeTab === 'settings' && 'Dashboard configuration'}
+                {activeTab === 'help' && 'Documentation and support'}
+              </p>
             </div>
-          </div>
 
-          {/* Right side controls - simplified */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {activeTab === 'analytics' && (
+            {/* Right side controls - simplified */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              {(activeTab === 'analytics' || activeTab === 'dashboard') && (
               <>
                 {/* Seat Counters */}
                 <div style={{ display: 'flex', gap: '12px', fontSize: '13px' }}>
@@ -553,16 +549,130 @@ function Dashboard() {
           )}
           
           {/* Main Dashboard Content */}
-          {activeTab === 'analytics' ? (
-            <ModernDashboard participants={participants} />
-          ) : activeTab === 'submissions' ? (
-            <CSVSubmissions />
-          ) : (
-            <>
-              {console.log('Dashboard: Passing participants to DataManagement:', participants.length)}
+          <div style={{ minHeight: 'calc(100vh - 80px)' }}>
+            {activeTab === 'dashboard' && (
+              <div style={{ padding: '24px' }}>
+                <UnifiedInsightsBanner participants={participants} />
+                <ModernDashboard participants={participants} />
+              </div>
+            )}
+            {activeTab === 'analytics' && (
+              <ModernDashboard participants={participants} />
+            )}
+            {activeTab === 'data' && (
+              <>
+                {console.log('Dashboard: Passing participants to DataManagement:', participants.length)}
+                <DataManagement participants={participants} />
+              </>
+            )}
+            {activeTab === 'participants' && (
               <DataManagement participants={participants} />
-            </>
-          )}
+            )}
+            {activeTab === 'revenue' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Revenue Analytics - Coming Soon</h3>
+                <p>Financial performance metrics and projections will be displayed here.</p>
+              </div>
+            )}
+            {activeTab === 'states' && (
+              <div style={{ padding: '24px' }}>
+                <h3>State Analysis - Coming Soon</h3>
+                <p>Geographic distribution and state-wise insights will be shown here.</p>
+              </div>
+            )}
+            {activeTab === 'submissions' && (
+              <CSVSubmissions />
+            )}
+            {activeTab === 'schedule' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Event Schedule - Coming Soon</h3>
+                <p>Event timeline and important dates will be displayed here.</p>
+              </div>
+            )}
+            {activeTab === 'performance' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Performance Metrics - Coming Soon</h3>
+                <p>KPIs and performance indicators will be shown here.</p>
+              </div>
+            )}
+            {activeTab === 'quality' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Data Quality Report - Coming Soon</h3>
+                <p>Data quality metrics and validation reports will be displayed here.</p>
+              </div>
+            )}
+            {activeTab === 'reports' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Reports Generator - Coming Soon</h3>
+                <p>Generate and download custom reports from here.</p>
+              </div>
+            )}
+            {activeTab === 'awards' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Awards & Badges - Coming Soon</h3>
+                <p>Recognition system for yatris will be shown here.</p>
+              </div>
+            )}
+            {activeTab === 'communication' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Communication Hub - Coming Soon</h3>
+                <p>Messages, notifications, and alerts will be managed here.</p>
+              </div>
+            )}
+            {activeTab === 'upload' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Upload Data</h3>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileUpload}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  style={{
+                    padding: '12px 24px',
+                    background: uploading ? '#9ca3af' : '#667eea',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: uploading ? 'not-allowed' : 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  {uploading ? (
+                    <>
+                      <Loader className="animate-spin" size={16} />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload size={16} />
+                      Upload CSV File
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+            {activeTab === 'settings' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Settings - Coming Soon</h3>
+                <p>Dashboard configuration and preferences will be available here.</p>
+              </div>
+            )}
+            {activeTab === 'help' && (
+              <div style={{ padding: '24px' }}>
+                <h3>Help & Support</h3>
+                <p>Documentation, guides, and support resources will be available here.</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -595,6 +705,7 @@ function Dashboard() {
           }
         `
       }} />
+      </div>
     </div>
   );
 }
